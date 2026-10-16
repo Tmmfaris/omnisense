@@ -1,0 +1,23 @@
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Environment secrets
+.env
+
+# Generated model and search artifacts
+models/
+*.faiss
+*.index
+
+# Local data and temporary files
+data/raw/
+*.wav
+*.mp4
