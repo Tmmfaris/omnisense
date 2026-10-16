@@ -21,7 +21,7 @@ from __future__ import annotations
 # Prevents segfault on macOS. Do not move this import.
 import torch  # noqa: F401
 
-import base64
+import html
 import os
 import shutil
 import subprocess
@@ -37,13 +37,17 @@ from omnisense.pipelines.audio import (
     extract_audio,
     transcribe,
 )
-from omnisense.pipelines.search import SearchHit, TranscriptSearchIndex
+from omnisense.pipelines.search import TranscriptSearchIndex
+from omnisense.pipelines.hybrid_search import (
+    HybridSearchHit,
+    HybridTranscriptSearchIndex,
+)
 from omnisense.utils.download import download_video, is_youtube_url
 
 
 # ── Module-level session state ─────────────────────────────────────────────────
 
-_index: TranscriptSearchIndex | None = None
+_index: HybridTranscriptSearchIndex | None = None
 _chunks: list[TranscriptChunk] = []
 _video_path: str | None = None
 _preview_dir: str = tempfile.mkdtemp(prefix="omnisense_preview_")
@@ -104,8 +108,12 @@ def handle_process(
                 gr.update(interactive=False),
             )
 
-        progress(0.85, desc="Building semantic search index...")
-        _index = TranscriptSearchIndex()
+        progress(0.85, desc="Building hybrid search indexes...")
+
+        semantic_index = TranscriptSearchIndex()
+        _index = HybridTranscriptSearchIndex(
+            semantic_index=semantic_index,
+        )
         _index.build(_chunks)
 
         duration_s = _chunks[-1].end if _chunks else 0
@@ -141,8 +149,11 @@ def handle_search(
             gr.update(visible=False),
         )
 
-    hits = _index.search(query, top_k=int(top_k), min_score=float(min_score))
-
+    hits = _index.search(
+    query,
+    top_k=int(top_k),
+    min_semantic_score=float(min_score),
+)
     if not hits:
         html = (
             "<div style='padding:16px;border-radius:8px;"
@@ -169,7 +180,7 @@ def handle_hit_selected(label: str) -> tuple[gr.update, gr.update]:
     Extract the selected segment into a short clip and autoplay it once.
     """
     if not label or _video_path is None:
-        return gr.update(value="", visible=False), gr.update(value="")
+        return gr.update(value=None, visible=False), gr.update(value="")
 
     start_sec, end_sec = _parse_times_from_label(label)
     start_fmt = _fmt_time(start_sec)
@@ -178,72 +189,38 @@ def handle_hit_selected(label: str) -> tuple[gr.update, gr.update]:
     logger.info(f"Selected hit: clip {start_sec}s -> {end_sec}s")
 
     try:
-        clip_path = _create_preview_clip(_video_path, start_sec, end_sec)
-        clip_data_url = _video_file_to_data_url(clip_path)
-
-        playback_html = f"""
-        <div style="
-            background:#ffffff;
-            border:1px solid #dbeafe;
-            border-radius:12px;
-            padding:16px;
-            box-shadow:0 1px 4px rgba(0,0,0,0.06);
-            font-family:system-ui,-apple-system,sans-serif;
-        ">
-            <div style="
-                background:#1d4ed8;
-                color:#fff;
-                border-radius:10px;
-                padding:14px 18px;
-                margin-bottom:14px;
-                text-align:center;
-            ">
-                <div style="font-size:13px;opacity:0.9;margin-bottom:4px;">
-                    Playing selected segment
-                </div>
-                <div style="font-size:34px;font-weight:800;letter-spacing:1px;">
-                    {start_fmt} → {end_fmt}
-                </div>
-                <div style="font-size:13px;opacity:0.9;margin-top:4px;">
-                    This preview clip starts automatically and plays once.
-                </div>
-            </div>
-
-            <video
-                controls
-                autoplay
-                playsinline
-                style="width:100%;border-radius:10px;background:#000;"
-            >
-                <source src="{clip_data_url}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        """
-
+        clip_path = _create_preview_clip(
+            _video_path,
+            start_sec,
+            end_sec,
+        )
+        logger.info("Preview clip ready: %s", clip_path)
         return (
-            gr.update(value=playback_html, visible=True),
-            gr.update(value=""),
+            gr.update(
+                value=clip_path,
+                visible=True,
+            ),
+            gr.update(
+                value=(
+                    f"<div style='padding:10px;color:#1d4ed8;"
+                    f"font-weight:600'>Playing segment: "
+                    f"{start_fmt} → {end_fmt}</div>"
+                )
+            ),
         )
 
     except Exception as e:
         logger.exception("Error while creating preview clip")
-        error_html = f"""
-        <div style="
-            padding:14px 16px;
-            border-radius:10px;
-            background:#fef2f2;
-            border:1px solid #fecaca;
-            color:#991b1b;
-            font-family:system-ui,-apple-system,sans-serif;
-        ">
-            <strong>Could not generate preview clip.</strong><br>
-            <span style="font-size:13px;">{e}</span>
-        </div>
-        """
         return (
-            gr.update(value=error_html, visible=True),
-            gr.update(value=""),
+            gr.update(value=None, visible=True),
+            gr.update(
+                value=(
+                    "<div style='color:#991b1b;padding:10px'>"
+                    "Could not generate preview clip. "
+                    "Check the application terminal for details."
+                    "</div>"
+                )
+            ),
         )
 
 
@@ -278,7 +255,7 @@ def handle_clear() -> tuple:
         "",  # results_html
         gr.update(choices=[], visible=False),  # hit_selector
         gr.update(value=""),  # seek_banner
-        gr.update(value="", visible=False),  # playback_html
+        gr.update(value=None, visible=False),  # playback_html
     )
 
 
@@ -338,13 +315,16 @@ def _create_preview_clip(source_path: str, start_sec: float, end_sec: float) -> 
         )
 
     _last_clip_path = clip_path
+
+    logger.info(f"Preview clip saved: {clip_path}")
+    logger.info(
+        f"Preview clip size: {os.path.getsize(clip_path)} bytes"
+    )
+
     return clip_path
 
 
-def _video_file_to_data_url(video_path: str) -> str:
-    with open(video_path, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode("utf-8")
-    return f"data:video/mp4;base64,{encoded}"
+
 
 
 # ── Label / time helpers ───────────────────────────────────────────────────────
@@ -355,14 +335,15 @@ def _fmt_time(seconds: float) -> str:
     return f"{m}:{s:02d}"
 
 
-def _hit_to_label(hit: SearchHit) -> str:
+def _hit_to_label(hit: HybridSearchHit) -> str:
     preview = hit.chunk.text[:100]
     if len(hit.chunk.text) > 100:
         preview += "..."
+
     return (
         f"#{hit.rank}  "
         f"[{_fmt_time(hit.chunk.start)} -> {_fmt_time(hit.chunk.end)}]  "
-        f"score:{hit.score:.0%}  --  {preview}"
+        f"RRF:{hit.score:.4f}  --  {preview}"
     )
 
 
@@ -380,57 +361,56 @@ def _parse_times_from_label(label: str) -> tuple[float, float]:
 # ── Result card HTML ───────────────────────────────────────────────────────────
 
 
-def _build_results_html(hits: list[SearchHit], query: str) -> str:
+def _build_results_html(
+    hits: list[HybridSearchHit],
+    query: str,
+) -> str:
+    """Render hybrid search results without treating RRF as a percentage."""
+    if not hits:
+        return "<p>No results found.</p>"
 
-    def _score_color(score: float) -> str:
-        if score >= 0.60:
-            return "#16a34a"
-        if score >= 0.40:
-            return "#ca8a04"
-        return "#dc2626"
-
+    max_score = max(hit.score for hit in hits) or 1.0
+    safe_query = html.escape(query)
     header = (
-        "<div style='font-family:system-ui,-apple-system,sans-serif;padding:2px'>"
-        "<p style='color:#475569;font-size:14px;margin:0 0 14px 0'>"
-        f"<strong>{len(hits)} result{'s' if len(hits) != 1 else ''}</strong> for "
-        f"&ldquo;<em style='color:#2563eb'>{query}</em>&rdquo;"
-        "&nbsp;&nbsp;·&nbsp;&nbsp;"
-        "<span style='color:#94a3b8'>select a result below to play that exact segment</span>"
+        "<div style='font-family:system-ui;padding:2px'>"
+        "<p style='color:#475569;font-size:14px;margin-bottom:14px'>"
+        f"<strong>{len(hits)} results</strong> for "
+        f"&ldquo;<em>{safe_query}</em>&rdquo;"
+        "<br><small>Ranked using semantic and keyword search.</small>"
         "</p>"
     )
-
     cards = ""
-    for h in hits:
-        color = _score_color(h.score)
-        bar_pct = int(h.score * 100)
+    for hit in hits:
+        relative_score = hit.score / max_score
+        bar_pct = max(0, min(100, int(relative_score * 100)))
+        safe_text = html.escape(hit.chunk.text)
         cards += f"""
         <div style="
             border:1px solid #e2e8f0;border-radius:10px;
             padding:14px 18px;margin-bottom:12px;
-            background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.06);
+            background:#ffffff;
         ">
-            <div style="display:flex;justify-content:space-between;
-                        align-items:center;margin-bottom:8px;">
-                <span style="font-weight:700;font-size:15px;color:#1e293b">
-                    #{h.rank}
-                    <span style="background:#1d4ed8;color:#fff;border-radius:5px;
-                                 padding:2px 10px;font-size:13px;margin-left:8px;
-                                 font-weight:600;">
-                        {_fmt_time(h.chunk.start)} - {_fmt_time(h.chunk.end)}
-                    </span>
-                </span>
-                <span style="font-size:13px;color:#64748b">
-                    match &nbsp;
-                    <strong style="color:{color};font-size:15px">{h.score:.0%}</strong>
+            <div style="margin-bottom:8px;">
+                <strong>#{hit.rank}</strong>
+                <span style="background:#1d4ed8;color:#fff;
+                    border-radius:5px;padding:2px 10px;margin-left:8px;">
+                    {_fmt_time(hit.chunk.start)} -
+                    {_fmt_time(hit.chunk.end)}
                 </span>
             </div>
-            <div style="background:#f1f5f9;border-radius:4px;height:5px;margin-bottom:10px">
-                <div style="width:{bar_pct}%;background:{color};height:5px;
-                            border-radius:4px;"></div>
+            <div style="background:#f1f5f9;border-radius:4px;
+                height:5px;margin-bottom:10px">
+                <div style="width:{bar_pct}%;background:#2563eb;
+                    height:5px;border-radius:4px"></div>
             </div>
-            <p style="margin:0;color:#334155;font-size:14px;line-height:1.65">
-                {h.chunk.text}
+            <p style="margin:0 0 8px;color:#334155;line-height:1.65">
+                {safe_text}
             </p>
+            <small style="color:#64748b">
+                RRF score: {hit.score:.4f}
+                | Semantic rank: {hit.semantic_rank or "—"}
+                | Keyword rank: {hit.keyword_rank or "—"}
+            </small>
         </div>
         """
 
@@ -558,8 +538,10 @@ def build_ui() -> gr.Blocks:
 
         seek_banner = gr.HTML(value="", visible=True)
 
-        playback_html = gr.HTML(
-            value="",
+        playback_html = gr.Video(
+            value=None,
+            label="Selected video segment",
+            autoplay=True,
             visible=False,
         )
 

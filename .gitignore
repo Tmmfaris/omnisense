@@ -21,3 +21,4 @@ models/
 data/raw/
 *.wav
 *.mp4
+.gradio/
