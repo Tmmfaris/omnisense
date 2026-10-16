@@ -1,16 +1,12 @@
 # 🔍 OmniSense — Temporal Video Search
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![HuggingFace Spaces](https://img.shields.io/badge/🤗-Live%20Demo-yellow)](https://huggingface.co/spaces/sajilck/omnisense)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
 > **Find exactly *when* something was said in a video. No more scrubbing.**
 
 Paste a YouTube URL or upload a video → it gets transcribed → search in plain English → click a result → video jumps directly to that moment.
 
 ---
 
-## ✨ What it does
+## What it does
 
 You remember a speaker mentioned something specific in a long video, but can't find where. OmniSense lets you search the video like a document and jumps you straight to the right moment.
 
@@ -29,7 +25,7 @@ Click #1 → video seeks to 12:34 and plays ▶
 
 ---
 
-## 🆕 What's new
+## What's new
 
 - **YouTube URL support** — paste any YouTube link directly; no download needed before use
 - **Auto video seek** — clicking a result jumps the embedded player to the exact timestamp automatically
@@ -37,7 +33,7 @@ Click #1 → video seeks to 12:34 and plays ▶
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ```
 YouTube URL  ──► yt-dlp download ──┐
@@ -58,7 +54,7 @@ File upload  ──────────────────────�
 
 ---
 
-## 🚀 Quickstart (local)
+## Quickstart (local)
 
 ```bash
 git clone https://github.com/cksajil/omnisense.git
@@ -81,7 +77,7 @@ python -m omnisense.app
 
 ---
 
-## ☁️ Run on Google Colab (recommended for testing)
+## Run on Google Colab (recommended for testing)
 
 No local GPU or heavy setup needed. Run the full app on a free T4 GPU:
 
@@ -104,7 +100,7 @@ Gradio will print a public URL like `https://xxxx.gradio.live` — open it in yo
 
 ---
 
-## 📁 Project structure
+## Project structure
 
 ```
 omnisense/
@@ -124,7 +120,7 @@ omnisense/
 
 ---
 
-## ⚙️ Model guide
+## Model guide
 
 | Model | Speed on CPU (per hr of audio) | Accuracy |
 |-------|-------------------------------|----------|
@@ -137,7 +133,7 @@ On Google Colab with a T4 GPU, all models run significantly faster than the CPU 
 
 ---
 
-## 🤗 Deploy to HuggingFace Spaces
+## Deploy to HuggingFace Spaces
 
 ```bash
 # Add your HF Space as a git remote
@@ -153,7 +149,7 @@ Or: HuggingFace → New Space → Gradio → link GitHub repo → select the `go
 
 ---
 
-## 🧪 Running tests
+## Running tests
 
 ```bash
 pytest tests/
