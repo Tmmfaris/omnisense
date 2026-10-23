@@ -22,7 +22,9 @@ from __future__ import annotations
 import torch  # noqa: F401
 
 import html
+import json
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import tempfile
@@ -115,6 +117,25 @@ def handle_process(
             semantic_index=semantic_index,
         )
         _index.build(_chunks)
+
+        # Export transcript chunks for search-quality evaluation
+        evaluation_dir = Path(__file__).resolve().parent / "evaluation"
+        evaluation_dir.mkdir(parents=True, exist_ok=True)
+        transcript_data = [
+            {
+                "chunk_id": chunk.chunk_id,
+                "text": chunk.text,
+                "start": chunk.start,
+                "end": chunk.end,
+            }
+            for chunk in _chunks
+        ]
+        transcript_path = evaluation_dir / "transcript_chunks.json"
+        transcript_path.write_text(
+            json.dumps(transcript_data, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        logger.info(f"Saved {len(transcript_data)} transcript chunks to {transcript_path}")
 
         duration_s = _chunks[-1].end if _chunks else 0
         m, s = divmod(int(duration_s), 60)
