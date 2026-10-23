@@ -197,6 +197,28 @@ Where:
 
 The combined score is used to order the results. **An RRF score is not a probability or a percentage confidence score.**
 
+## Evaluation
+
+OmniSense includes a preliminary evaluation script to compare semantic-only retrieval with hybrid retrieval using manually labelled relevant transcript segments.
+
+Run the evaluation from the repository root:
+
+```bash
+python -m evaluation.evaluate_search
+```
+
+### Preliminary Results
+
+| Metric | Semantic Search | Hybrid Search |
+|---|---|---|
+| Precision@5 | 0.320 | 0.320 |
+| Recall@5 | 0.600 | 0.600 |
+| MRR@5 | 0.900 | 1.000 |
+
+**Interpretation:** In the current five-query benchmark, hybrid search achieves a higher MRR@5, while Precision@5 and Recall@5 are equal for both methods.
+
+**Limitations:** These results are preliminary because the benchmark contains only five queries and uses manually assigned relevance labels. A larger, more diverse benchmark is needed to draw stronger conclusions about retrieval performance.
+
 ## Project Structure
 
 ```text
@@ -207,13 +229,15 @@ omnisense/
 │   │   ├── search.py
 │   │   └── hybrid_search.py
 │   ├── utils/
-│   │   ├── download.py
-│   │   └── logger.py
 │   ├── app.py
 │   └── config.py
 ├── tests/
 │   ├── test_search.py
 │   └── test_hybrid_search.py
+├── evaluation/
+│   ├── benchmark.json
+│   ├── evaluate_search.py
+│   └── transcript_chunks.json
 ├── requirements.txt
 ├── .gitignore
 └── README.md
