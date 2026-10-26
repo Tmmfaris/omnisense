@@ -158,13 +158,32 @@ ffplay -version
 
 ### 5. Launch the application
 
-```bash
+Make sure you are inside the project directory with your virtual environment activated:
+
+**Windows (PowerShell):**
+
+```powershell
+# Navigate to the project directory
+cd "C:\FARIS\DSA\OmniSense 2.0\omnisense"
+
+# Activate the virtual environment
+.\.venv\Scripts\Activate.ps1
+
+# Start the application
 python -m omnisense.app
 ```
 
-Open the local Gradio URL displayed in your terminal, typically:
+**Linux / macOS:**
 
-`http://127.0.0.1:7860`
+```bash
+cd omnisense
+source .venv/bin/activate
+python -m omnisense.app
+```
+
+Once started, open the local Gradio interface in your web browser:
+
+`http://127.0.0.1:7860` (or `http://localhost:7860`)
 
 ## Hybrid Search Implementation
 
