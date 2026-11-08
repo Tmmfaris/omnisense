@@ -63,7 +63,7 @@ def handle_process(
     video_file: str | None,
     youtube_url: str,
     model_size: str,
-    progress: gr.Progress = gr.Progress(track_tqdm=True),
+    progress: gr.Progress = gr.Progress(track_tqdm=False),
 ) -> tuple[str, gr.update]:
     global _index, _chunks, _video_path, _last_clip_path
 
