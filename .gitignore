@@ -1,4 +1,4 @@
-@"
+
 # Python
 __pycache__/
 *.py[cod]
@@ -9,15 +9,16 @@ __pycache__/
 venv/
 env/
 
+# Python cache and testing
+.pytest_cache/
+.ipynb_checkpoints/
+
 # Gradio
 .gradio/
 
-# Environment variables
+# Environment variables and secrets
 .env
 .env.*
-
-# Jupyter
-.ipynb_checkpoints/
 
 # IDE
 .vscode/
@@ -29,4 +30,13 @@ Thumbs.db
 
 # Logs
 *.log
-"@ | Set-Content .gitignore
+
+# Generated models and search indexes
+models/
+*.faiss
+*.index
+
+# Local data and temporary files
+data/raw/
+*.wav
+*.mp4

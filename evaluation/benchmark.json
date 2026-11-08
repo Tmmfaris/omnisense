@@ -1,0 +1,388 @@
+{
+  "queries": [
+    {
+      "query": "How does Google translate a web page into another language?",
+      "relevant_chunk_ids": [
+        0
+      ]
+    },
+    {
+      "query": "What is deep learning?",
+      "relevant_chunk_ids": [
+        2,
+        3,
+        4,
+        7
+      ]
+    },
+    {
+      "query": "How is deep learning related to machine learning and artificial intelligence?",
+      "relevant_chunk_ids": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "query": "How does the human brain inspire deep learning?",
+      "relevant_chunk_ids": [
+        7,
+        8
+      ]
+    },
+    {
+      "query": "How does a neural network select features in deep learning?",
+      "relevant_chunk_ids": [
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": 0,
+      "text": "Ever wondered how Google translates an entire web page to a different language in a matter of seconds?",
+      "start": 0.06,
+      "end": 5.9
+    },
+    {
+      "chunk_id": 1,
+      "text": "Or your phone gallery group's images, based on their location?",
+      "start": 5.9,
+      "end": 9.82
+    },
+    {
+      "chunk_id": 2,
+      "text": "All of this is a product of deep learning.",
+      "start": 9.82,
+      "end": 12.46
+    },
+    {
+      "chunk_id": 3,
+      "text": "But, what exactly is deep learning?",
+      "start": 12.46,
+      "end": 15.34
+    },
+    {
+      "chunk_id": 4,
+      "text": "Deep learning is a subset of machine learning, which in turn is a subset of artificial intelligence.",
+      "start": 15.34,
+      "end": 21.18
+    },
+    {
+      "chunk_id": 5,
+      "text": "Artificial intelligence is a technique that enables a machine to mimic human behavior.",
+      "start": 21.18,
+      "end": 26.46
+    },
+    {
+      "chunk_id": 6,
+      "text": "Machine learning is a technique to achieve AI through algorithms trained with data.",
+      "start": 26.46,
+      "end": 31.66
+    },
+    {
+      "chunk_id": 7,
+      "text": "And, finally, deep learning is a type of machine learning inspired by the structure of the human brain.",
+      "start": 31.66,
+      "end": 37.9
+    },
+    {
+      "chunk_id": 8,
+      "text": "In terms of deep learning, this structure is called an artificial neural network.",
+      "start": 37.9,
+      "end": 42.86
+    },
+    {
+      "chunk_id": 9,
+      "text": "Let's understand deep learning better and how it's different from machine learning.",
+      "start": 42.86,
+      "end": 47.34
+    },
+    {
+      "chunk_id": 10,
+      "text": "Say we create a machine that could differentiate between tomatoes and cherries.",
+      "start": 47.34,
+      "end": 51.9
+    },
+    {
+      "chunk_id": 11,
+      "text": "If done using machine learning, we'd have to tell the machine the features based on which the two",
+      "start": 51.9,
+      "end": 57.1
+    },
+    {
+      "chunk_id": 12,
+      "text": "can be differentiated. These features could be the size and the type of stem on them.",
+      "start": 57.1,
+      "end": 62.3
+    },
+    {
+      "chunk_id": 13,
+      "text": "With deep learning on the other hand, the features are picked out by the neural network",
+      "start": 62.3,
+      "end": 66.86
+    },
+    {
+      "chunk_id": 14,
+      "text": "without human intervention. Of course, that kind of independence comes at the cost of having a",
+      "start": 66.86,
+      "end": 72.3
+    },
+    {
+      "chunk_id": 15,
+      "text": "much higher volume of data to train our machine. Now, let's dive into the working of neural networks.",
+      "start": 72.3,
+      "end": 79.24
+    },
+    {
+      "chunk_id": 16,
+      "text": "Here, we have three students. Each of them write down the digit nine on a piece of paper.",
+      "start": 79.24,
+      "end": 84.28
+    },
+    {
+      "chunk_id": 17,
+      "text": "Notably, they don't all write it identically. The human brain can easily recognize the digits.",
+      "start": 84.92,
+      "end": 90.6
+    },
+    {
+      "chunk_id": 18,
+      "text": "But, what if a computer had to recognize them? That's where deep learning comes in.",
+      "start": 91.24,
+      "end": 96.55
+    },
+    {
+      "chunk_id": 19,
+      "text": "Here's a neural network trained to identify handwritten digits. Each number is present as an",
+      "start": 97.11,
+      "end": 102.79
+    },
+    {
+      "chunk_id": 20,
+      "text": "image of 28 x 28 pixels. Now, that amounts to a total of 784 pixels. Neurons, the core entity of",
+      "start": 102.79,
+      "end": 111.83
+    },
+    {
+      "chunk_id": 21,
+      "text": "a neural network, is where the information processing takes place. Each of the 784 pixels is fed to a",
+      "start": 111.83,
+      "end": 119.11
+    },
+    {
+      "chunk_id": 22,
+      "text": "neuron in the first layer of our neural network. This forms the input layer. On the other hand,",
+      "start": 119.11,
+      "end": 125.93
+    },
+    {
+      "chunk_id": 23,
+      "text": "we have the output layer with each neuron representing a digit with the hidden layers existing",
+      "start": 125.93,
+      "end": 131.21
+    },
+    {
+      "chunk_id": 24,
+      "text": "between them. The information is transferred from one layer to another over connecting channels.",
+      "start": 131.21,
+      "end": 137.45
+    },
+    {
+      "chunk_id": 25,
+      "text": "Each of these has a value attached to it, and hence is called a weighted channel. All neurons have",
+      "start": 137.45,
+      "end": 143.62
+    },
+    {
+      "chunk_id": 26,
+      "text": "a unique number associated with it called bias. This bias is added to the weighted sum of inputs",
+      "start": 143.62,
+      "end": 150.42
+    },
+    {
+      "chunk_id": 27,
+      "text": "reaching the neuron, which is then applied to a function known as the activation function.",
+      "start": 150.42,
+      "end": 156.92
+    },
+    {
+      "chunk_id": 28,
+      "text": "The result of the activation function determines if the neuron gets activated. Every activated neuron",
+      "start": 156.92,
+      "end": 163.45
+    },
+    {
+      "chunk_id": 29,
+      "text": "passes on information to the following layers. This continues up to the second last layer.",
+      "start": 163.45,
+      "end": 170.26
+    },
+    {
+      "chunk_id": 30,
+      "text": "The one neuron activated in the output layer corresponds to the input digit. The weights and bias",
+      "start": 170.26,
+      "end": 176.74
+    },
+    {
+      "chunk_id": 31,
+      "text": "are continuously adjusted to produce a well-trained network. So, where is deep learning applied?",
+      "start": 176.74,
+      "end": 182.9
+    },
+    {
+      "chunk_id": 32,
+      "text": "In customer support, when most people converse with customer support agents,",
+      "start": 182.98,
+      "end": 187.3
+    },
+    {
+      "chunk_id": 33,
+      "text": "the conversation seems so real. They don't even realize that it's actually a bot on the other side.",
+      "start": 187.3,
+      "end": 193.78
+    },
+    {
+      "chunk_id": 34,
+      "text": "In medical care, neural networks detect cancer cells and analyze MRI images to give detailed",
+      "start": 193.78,
+      "end": 199.94
+    },
+    {
+      "chunk_id": 35,
+      "text": "results. Self-driving cars. What seem like science fiction is now a reality. Apple, Tesla,",
+      "start": 199.94,
+      "end": 207.86
+    },
+    {
+      "chunk_id": 36,
+      "text": "and Nissan are only a few of the companies working on self-driving cars. So, deep learning has a",
+      "start": 207.86,
+      "end": 213.78
+    },
+    {
+      "chunk_id": 37,
+      "text": "vast scope, but it too faces some limitations. The first as we discussed earlier is data. While deep",
+      "start": 213.78,
+      "end": 221.62
+    },
+    {
+      "chunk_id": 38,
+      "text": "learning is the most efficient way to deal with unstructured data, a neural network requires a",
+      "start": 221.62,
+      "end": 226.98
+    },
+    {
+      "chunk_id": 39,
+      "text": "massive volume of data to train. Let's assume we always have access to the necessary amount of data.",
+      "start": 226.98,
+      "end": 233.14
+    },
+    {
+      "chunk_id": 40,
+      "text": "Processing this is not within the capability of every machine, and that brings us to our second",
+      "start": 233.14,
+      "end": 239.46
+    },
+    {
+      "chunk_id": 41,
+      "text": "limitation, computational power. Training a neural network requires graphical processing units,",
+      "start": 239.46,
+      "end": 246.58
+    },
+    {
+      "chunk_id": 42,
+      "text": "which have thousands of cores as compared to CPUs, and GPUs are of course more expensive.",
+      "start": 246.58,
+      "end": 253.94
+    },
+    {
+      "chunk_id": 43,
+      "text": "And finally, we come down to training time. Deep neural networks take hours or even months to train.",
+      "start": 253.94,
+      "end": 261.3
+    },
+    {
+      "chunk_id": 44,
+      "text": "The time increases with the amount of data and number of layers in the network. So, here's a short",
+      "start": 261.3,
+      "end": 267.54
+    },
+    {
+      "chunk_id": 45,
+      "text": "quiz for you. Arrange the following statements in order to describe the working of a neural network.",
+      "start": 267.54,
+      "end": 273.7
+    },
+    {
+      "chunk_id": 46,
+      "text": "A, the bias is added. B, the weighted sum of the inputs is calculated. C, specific neuron is activated.",
+      "start": 273.7,
+      "end": 282.74
+    },
+    {
+      "chunk_id": 47,
+      "text": "D, the result is fed to an activation function. Leave your answers in the comments section below.",
+      "start": 282.74,
+      "end": 289.14
+    },
+    {
+      "chunk_id": 48,
+      "text": "Three of you stand a chance to win Amazon vouchers. So hurry! Some of the popular deep learning frameworks",
+      "start": 289.14,
+      "end": 295.3
+    },
+    {
+      "chunk_id": 49,
+      "text": "include Tinserflow, PyTorch, Keras, Deep Learning 4J, Cafe, and Microsoft Cognitive Toolkit.",
+      "start": 295.3,
+      "end": 302.58
+    },
+    {
+      "chunk_id": 50,
+      "text": "Considering the future predictions for deep learning and AI, we seem to have only scratched the",
+      "start": 302.58,
+      "end": 308.18
+    },
+    {
+      "chunk_id": 51,
+      "text": "surface. In fact, Horace technology is working on a device for the blind that uses deep learning with",
+      "start": 308.18,
+      "end": 314.02
+    },
+    {
+      "chunk_id": 52,
+      "text": "computer vision to describe the world to the users. Replicating the human mind at the entirety",
+      "start": 314.02,
+      "end": 320.34
+    },
+    {
+      "chunk_id": 53,
+      "text": "may be not just an episode of science fiction for too long. The future is indeed full of surprises.",
+      "start": 320.34,
+      "end": 327.7
+    },
+    {
+      "chunk_id": 54,
+      "text": "And that is deep learning for you in short. If you enjoyed this video, do like and share it.",
+      "start": 327.7,
+      "end": 333.38
+    },
+    {
+      "chunk_id": 55,
+      "text": "Also, subscribe to our channel if you haven't yet, as we have a lot more exciting videos coming up.",
+      "start": 333.38,
+      "end": 339.46
+    },
+    {
+      "chunk_id": 56,
+      "text": "Fun learning till then!",
+      "start": 339.46,
+      "end": 341.46
+    }
+  ]
+}
