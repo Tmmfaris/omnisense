@@ -1,4 +1,4 @@
-# OmniSense 2.0 — Hybrid Temporal Video Search
+# OmniSense — Hybrid Temporal Video Search
 
 **Find exactly when something was said in a video using natural-language and keyword search.**
 
